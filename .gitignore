@@ -1,0 +1,11 @@
+# LaTeX Log file exclusion
+*.log
+*.aux
+*.gz
+*.toc
+*.lof
+*.lot
+*.out
+
+# PDF files
+*.pdf
