@@ -14,7 +14,7 @@ def main():
 
     while(1):
         # chossing option to do CRUD operations
-        selection = input('\nSelect 1 to insert, 2 to update, 3 to read, 4 to delete\n')
+        selection = input('\nSelect 1 to insert, 2 to update, 3 to read, 4 to delete, 5 to get user\n')
 
         if selection == '1':
             insert()
@@ -25,6 +25,8 @@ def main():
         elif selection == '4':
             print('delete \n')
             delete()
+        elif selection == '5':
+            getUser()
         else:
             print("\n INVALID SELECTION \n")
 
@@ -94,6 +96,17 @@ def delete():
 
     except Exception:
         print(Exception)
+
+############################################### Function for getUser frtom mongo db ######################################################
+def getUser():
+    try:
+        criteria = input('\nEnter a student number to retrieve\n')
+        user = db.userDB.find_one({"StudentNumber": criteria})
+        print(user)
+
+    except Exception:
+        print(Exception)
+
 
 main()
 sys(exit)
