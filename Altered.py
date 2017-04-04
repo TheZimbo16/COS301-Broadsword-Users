@@ -83,13 +83,8 @@ def read():
 def delete(StudentNumber): 
     try: 
         #criteria = input('\nEnter a student number to delete\n') 
-        db.userDB.delete_many({"StudentNumber":criteria}) 
+        db.userDB.delete_many({"StudentNumber":StudentNumber}) 
         print('\nDeletion successful\n') 
-
-         db.userDB.delete_one( 
-            {"StudentNumber": StudentNumber}
-            )
-         print("\nRecord deleted successfully\n")
 
     except Exception: 
         print(Exception) 
