@@ -11,19 +11,17 @@ client = MongoClient(uri)
 db = client.userDB
 
 ######################################### Function to insert data into mongo db#######################################
-def insertOne(Username, UserSurname, StudentNumber):
+def insertOne(Username, UserSurname, Email, Password, StudentNumber, Phone):
     try:
-        # #_id = input('Enter Employee id :')
-        # UserName = input('Enter Name :')
-        # UserSurname = input('Enter Surname :')
-        # StudentNumber = input('Enter Student Number :')
 
         db.userDB.insert_one(
         {
-            #"_id": _id,
             "Name":UserName,
             "Surname":UserSurname,
+            "Email":Email,
+            "Password": Password,
             "StudentNumber":StudentNumber,
+            "Phone":Phone,
             "isAuthenticated": False,
             "isAdmin":False
         })
@@ -33,20 +31,18 @@ def insertOne(Username, UserSurname, StudentNumber):
         print(Exception)
 
 ##################################### Function to update record to mongo db #############################################
-def update():
+def update(toUpdate, Username, UserSurname, Email, Password, StudentNumber, Phone):
     try:
-        criteria = input('\nEnter a student number to update\n')
-        name = input('\nEnter name to update\n')
-        surname = input('\nEnter Surname to update\n')
-        #StuNumber = input('\nEnter Student Number to update\n')
-
         db.userDB.update_one(
-            {"StudentNumber": criteria},
+            {"StudentNumber": toUpdate},
             {
                 "$set": {
-                    "Name":name,
-                    "Surname":surname,
-                    #"StudentNumber":StuNumber
+                    "Name":Username,
+                    "Surname":UserSurname,
+                    "Email":Email,
+                    "Password":Password,
+                    "StudentNumber":StudentNumber,
+                    "Phone":Phone
                         }
             }
             )
@@ -67,9 +63,9 @@ def read():
         print(Exception)
 
 ################################################ Function to delete record from mongo db##############################################
-def delete():
+def delete(toDelete):
     try:
-        criteria = input('\nEnter a student number to delete\n')
+        criteria = toDelete
         db.userDB.delete_many({"StudentNumber":criteria})
         print('\nDeletion successful\n')
 
@@ -77,15 +73,11 @@ def delete():
         print(Exception)
 
 ############################################### Function for getUser frtom mongo db ######################################################
-def getUser():
+def getUser(toGet):
     try:
-        criteria = input('\nEnter a student number to retrieve\n')
+        criteria = toGet
         user = db.userDB.find_one({"StudentNumber": criteria})
         print(user)
 
     except Exception:
         print(Exception)
-
-
-main()
-sys(exit)
