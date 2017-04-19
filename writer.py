@@ -8,14 +8,10 @@ request="""{
     "src"  : "Access",
     "dest" : "users",
     "msgType" : "request",
-    "queryType" : "insert",
+    "queryType" : "log_in",
     "content" : {
-                      "fname" : "MWAH",
-                      "sname" : "Doe",
-                      "stud_num" : "15043143",
-                      "email" : "wow@gmail.com",
-                      "password" : "funny",
-                      "phone" : "0820618804"
+                      "logIn" : "13104332",
+                      "password": "funny"
                 }
 }""";
 

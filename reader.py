@@ -16,53 +16,36 @@ def requestHandler(message):
 
         #response = message.body.decode('utf-8')
         #string = response.readall().decode('utf-8')
-        print(message.body)
+        #print(message.body)
         obj = json.loads(message.body.decode('utf-8'))
-        #message.enable_async()
+        message.enable_async()
         if obj['dest'] == 'users':
 
             query = obj['queryType']
 
             if query == 'insert':
-                name = obj['content']['fname']
-                lName = obj['content']['sname']
-                sNumber = obj['content']['stud_num']
-                email = obj['content']['email']
-                password = obj['content']['password']
-                phone = obj['content']['phone']
-
-                insertOne(name, lName, email, password, sNumber, phone)
-
+                insertOne(obj['content']['fname'], obj['content']['sname'], obj['content']['email'], obj['content']['password'], obj['content']['stud_num'], obj['content']['phone'])
 
             elif query == 'update':
-                toUpdate = obj['content']['update']
-                name = obj['content']['fname']
-                lName = obj['content']['sname']
-                sNumber = obj['content']['stud_num']
-                email = obj['content']['email']
-                password = obj['content']['password']
-                phone = obj['content']['phone']
-                update(toUpdate, name, lName, email, password, sNumber, phone)
+                update(obj['content']['update'], obj['content']['fname'], obj['content']['sname'], obj['content']['email'], obj['content']['password'], obj['content']['stud_num'], obj['content']['phone'])
 
             elif query == 'delete':
-                toDelete = obj['content']['to_delete']
-                update(toDelete)
+                delete(obj['content']['to_delete'])
 
             elif query == 'read':
                 read()
 
-            elif query == 'read':
+            elif query == 'make_admin':
                 makeAdmin(obj['content']['makeAdmin'])
 
             elif query == 'get_user':
-                toGet = obj['content']['toGet']
-                getUser(toGet)
+                getUser(obj['content']['toGet'])
 
             elif query == 'log_in':
                 logIn(obj['content']['logIn'], obj['content']['password'])
 
-            else:
-                print(message.body)
+            #else:
+                #print(message.body)
 
 ######################################### Function to insert data into mongo db#######################################
 def insertOne(UserName, UserSurname, Email, Password, StudentNumber, Phone):
@@ -138,6 +121,9 @@ def getUser(toGet):
             print(user)
             return True
 
+        else:
+            return False
+
     except Exception:
         print(Exception)
 
@@ -159,6 +145,7 @@ def makeAdmin(UserName):
                 }
                 )
             print("\nRecords updated successfully\n")
+            return True
 
     except Exception:
         print(Exception)
@@ -183,6 +170,9 @@ def logIn(UserName, Password):
 
     except Exception:
         print(Exception)
+
+########################################################################################################
+
 
 r = nsq.Reader(message_handler=requestHandler, lookupd_http_addresses=['http://127.0.0.1:4161'], topic='users', channel='navup', lookupd_poll_interval=15)
 nsq.run()
