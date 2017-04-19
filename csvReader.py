@@ -28,7 +28,7 @@ def insertOne(UserName, UserSurname, Email, Password, StudentNumber, Phone):
 
 
 with open('names.csv', newline='') as csvfile:
-    reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+    reader = csv.reader(csvfile, delimiter=',', quotechar='|')
 
     for row in reader:
         print(row[0], row[1], row[2],row[3], row[4], row[5])
