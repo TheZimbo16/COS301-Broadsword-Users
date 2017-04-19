@@ -5,18 +5,15 @@ import sys
 import nsq
 import json
 
-uri = "localhost:27017"
+URI = "localhost:27017"
 
 from pymongo import MongoClient
 
-client = MongoClient(uri)
+client = MongoClient(URI)
 db = client.userDB
 
 def requestHandler(message):
 
-        #response = message.body.decode('utf-8')
-        #string = response.readall().decode('utf-8')
-        #print(message.body)
         obj = json.loads(message.body.decode('utf-8'))
         message.enable_async()
         if obj['dest'] == 'users':
@@ -42,17 +39,13 @@ def requestHandler(message):
                 getUser(obj['content']['toGet'])
 
             elif query == 'log_in':
-                logIn(obj['content']['logIn'], obj['content']['password'])
+                log_in(obj['content']['log_in'], obj['content']['password'])
 
-            #else:
-                #print(message.body)
 
 ######################################### Function to insert data into mongo db#######################################
 def insertOne(UserName, UserSurname, Email, Password, StudentNumber, Phone):
-    try:
         if getUser(StudentNumber):
             print('StudentNumber already exists!')
-            return False
 
         else:
             db.userDB.insert_one(
@@ -67,14 +60,10 @@ def insertOne(UserName, UserSurname, Email, Password, StudentNumber, Phone):
                 "isAdmin":False
             })
             print('\nInserted data successfully\n')
-            return True
 
-    except Exception:
-        print(Exception)
 
 ##################################### Function to update record to mongo db #############################################
 def update(toUpdate, Username, UserSurname, Email, Password, StudentNumber, Phone):
-    try:
         db.userDB.update_one(
             {"StudentNumber": toUpdate},
             {
@@ -90,50 +79,32 @@ def update(toUpdate, Username, UserSurname, Email, Password, StudentNumber, Phon
             )
         print("\nRecords updated successfully\n")
 
-    except Exception:
-        print(Exception)
 
 ############################################ function to read records from mongo db###################################################
 def read():
-    try:
         numCols = db.userDB.find()
         print('\n ************* All data from users Database ****************\n')
         for nums in numCols:
             print(nums)
 
-    except Exception:
-        print(Exception)
 
 ################################################ Function to delete record from mongo db##############################################
 def delete(toDelete):
-    try:
         db.userDB.delete_many({"StudentNumber":toDelete})
         print('\nDeletion successful\n')
 
-    except Exception:
-        print(Exception)
 
 ############################################### Function for getUser from mongo db ######################################################
 def getUser(toGet):
-    try:
         user = db.userDB.find_one({"StudentNumber":toGet})
         if(user["StudentNumber"] == toGet):
             print(user)
-            return True
-
-        else:
-            return False
-
-    except Exception:
-        print(Exception)
 
 ############################################ Function to set user as an Admin ###############################################################
 def makeAdmin(UserName):
-    try:
         user = db.userDB.find_one({"StudentNumber":UserName})
         if(user["StudentNumber"] == UserName):
             print('User does not exist')
-            return False
 
         else:
             db.userDB.update_one(
@@ -145,13 +116,8 @@ def makeAdmin(UserName):
                 }
                 )
             print("\nRecords updated successfully\n")
-            return True
 
-    except Exception:
-        print(Exception)
-
-def logIn(UserName, Password):
-    try:
+def log_in(UserName, Password):
         user = db.userDB.find_one({"StudentNumber":UserName})
         if(user["StudentNumber"] == UserName):
             if(user["Password"] == Password):
@@ -163,16 +129,10 @@ def logIn(UserName, Password):
                                 }
                     }
                     )
-                return True
             else:
                 print('Log In failed')
-                return False
-
-    except Exception:
-        print(Exception)
 
 ########################################################################################################
 
-
-r = nsq.Reader(message_handler=requestHandler, lookupd_http_addresses=['http://127.0.0.1:4161'], topic='users', channel='navup', lookupd_poll_interval=15)
+r = nsq.Reader(message_handler=requestHandler, lookupd_http_addresses=['http://127.0.0.1:4161'], topic='users', channel='navup', lookupd_poll_interval=5)
 nsq.run()
