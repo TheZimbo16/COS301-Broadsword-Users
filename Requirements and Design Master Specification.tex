@@ -1,0 +1,403 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\includegraphics[scale=1]{diagrams/up.png}
+\\
+\begin{huge}
+\textbf{2017 Class Project}
+
+\textbf{NavUP}\\
+\end{huge}
+\begin{small}
+Morkel Theunissen\\
+Vreda Pieterse\\
+Emilio Singh\\
+Stacey Omeleze\\ 
+
+\end{small}
+\begin{huge}
+\textbf{Requires and Design Specifications}
+\end{huge}
+
+\end{center}
+\end{titlepage}
+
+\section{Vision and Scope}
+\subsection{Project Background}
+Information about the activities, points of interest and venues on campus is not readily available to employees, students and visitors to the UP campus. This is especially a problem at the beginning of the academic year when thousands of new students come to campus to attend regular lectures and on open days when large numbers of visitors have to find their way to exhibitions and service points.
+\subsection{Project Vision}
+NavUP is aimed at providing access to a wealth of information about campus activities, points of interest and venues via the campus WiFi network. The information should be accessible using smart devices.  Users should be able to use the information to navigate on campus and be informed about activities and facts of their interest. 
+\\
+\\
+The proposed system is to be integrated into the Computer Science Department's web site. It should enable users to enter and edit information in a controlled manner. It should also allow the integration of a variety of services of which basic navigation is the main objective. Other tools may include (but need not limited to) surveillance, targeted delivery of information, fitness monitoring tools and treasure hunt support tools.
+
+\subsection{Architecture Design of NavUP System}
+At the highest level of granularity, the NavUP system  is based on Service Oriented Architecture (SOA).  Second level of granularity can be visualised as to be based on model-view-controller (MVC), which further transcends to micro services in relation to SOA as identified at the NavUP system’s  highest level of granularity.  SOA  emphasis on integrability and re-use, which also aligns to microkernel pattern and adapts to the concepts of services and routers.
+\\
+\\
+The sub-systems of the NavUP  system with its lower-level sub-systems as identified at the functional requirements specifications is used to identified the following:
+\begin{enumerate}
+\item Architectural Patterns of the NavUP Systems: The architectural patterns of the NavUP system are focused and narrowed to patterns that could address the decoupling need of the system, enhance the no-dependency requirements of the system.   Therefore the   following architectural patterns are  identified: \begin{enumerate}
+\item Service oriented architecture patterns  (Micro services)
+\item Layered architecture patterns 
+\item Model-view-control architecture patterns 
+\item Blackboard architectural patterns 
+
+\end{enumerate}
+\item Quality Requirements of  the NavUP Systems: should include but not limited to the following:\begin{enumerate}
+\item Performance 
+\item Integrability
+\item Availability
+\item Maintainability
+\item Scalability
+\item Reliability 
+\item Security
+\item Accessibility
+
+\end{enumerate}
+Each of these aspects is focused on the various modules of the navUP system as depicted in Figure  1.
+
+\item Architectural tactics: The architectural tactic that could address the need of NavUP system’s  quality requirements are as follow: \begin{enumerate}
+\item Performance requirements is addressed using:\begin{enumerate}
+\item Throttling  
+\item Load balancing 
+\item Connection/Thread pooling
+\item Scheduling  and Queuing  
+\item Object caching
+
+\end{enumerate}
+
+\end{enumerate}
+\end{enumerate}
+\subsection{Project Scope}
+The core of the system is a navigation tool which is enriched with functionality receiving information of interest. The high level modules and their responsibilities are shown in Figure 1
+\begin{figure}
+\centering
+\includegraphics[scale=1]{diagrams/COS301_NavUP_Deployment}
+\end{figure}
+\subsection{Design Requirement}
+The system is to be a modular system which allows for:
+\begin{itemize}
+\item only a subset of modules to be deployed -- minimally the system will require the core modules to be deployed.
+\item further modules, of which the navigation module is the most desirable, to be added at a later stage.
+\end{itemize}
+To this end the system should be implemented with:
+\begin{itemize}
+\item minimal dependencies between modules
+\item no dependencies of core modules on any add-on modules
+\item as far as possible making use of dependency injection.  
+\end{itemize}
+\section{Team Responsibilies in a nutshell}
+The implementation of NavUP is allocated to different teams who each has to develop a small portion of the system as an independent module. The following is a brief description of the responsibility of each of the teams:
+\begin{itemize}
+\item Users: Implement a database that handles authentication and maintains user profiles
+\item GIS: Implement a database for static information including (i) building plans (ii) location of WiFi access points (APs) and their reach and signal strengths (iii) semi-static information such as construction sites, etc.
+\item Navigation: Implement the logic for calculation of routes in compliance with specified restrictions. This module should use information about location and the environment as it is provided by other modules.
+\item Notification: Implement services that relay of messages from the different modules to users using their preferred method of receiving notifications.
+\item Data: Implement data streaming services - this module gather streams from servers, APs and other devices, sanitise them and relay relevant information to the different modules.
+\item Access: Each access team should implement a device app as prescribed for the instance of NavUP to provide the HCI interface to the system. These are:
+\begin{itemize}
+\item Longsword: Android
+\item Broadsword: Web
+\item Gladius: iOS
+\item Zweihander: Hybrid Model
+
+\end{itemize}
+\item Integration: Setup a deployment server of the instance. Provide the infrastructure for teams to be able to test and deploy their respective modules. Coordinate the development of the instance.
+
+\end{itemize}
+\section{User Management Module}
+\subsection{Scope}
+The scope of the user management module is shown in Figure 1. The user management module is responsible for maintaining information about the registered users of the system, including the authority levels of each user. Administrators can manage information about venues and activities whilst users who have signed up may request services from the various modules and persist private information related to particular  services.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/use.png}
+\end{figure}
+\begin{itemize}
+\item Guest: No information is stored for the guest user. When accessing the service, the user assumes the guest role without being logged in. The guest user may use public services and my register or log in.
+\item User: When a user is registered, the fields shown in the domain model are stored for the user, using a unique automatically assigned ID. The user provides all other fields. The password should be stored in encrypted format. The user may change the value of any of the fields of his or her own record except the value of the isAdmin field.  The  difference between a Main$\_$user and an Admin is the value of the isAdmin field. Only Admin users may change the value of the isAdmin field of other users.
+
+\end{itemize}
+
+The register as user  use case is initiated by an end-user to create an account. 
+
+User should not be created if the email specified in the request to create a user is already associated with an existing user. This is done to ensure that if a user is already associated with the email address, the user is given access to his/her profile instead of creating a new user.
+
+Note that this use case will use the getUser(userName) service provided by the module to conﬁrm if another user with that same username already exists in the system. A user should only be created if getUser(userName)  throws the noSuchUser exception.  
+
+After the account has been created a notiﬁcation will be sent to the user.
+\subsection{Domain Model}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/usedom.png}
+\end{figure}
+\subsection{Service Contracts}
+The following services should be provided
+getUser(userName)
+Precondition: userName is a registered user
+Exception: If userName is not a registered user throw noSuchUser exception
+Postcondition: No change
+Return: a userObject
+
+insert(user)
+Precondition: userName is a registered user
+Exception: If userName is not a registered user throw noSuchUser exception
+Postcondition: user inserted into database
+Return: a userObject
+
+delete(ToDelete)
+Precondition: userName is a registered user
+Exception: If userName is not a registered user throw noSuchUser exception
+Postcondition: user is deleted
+Return: successfull deletion message
+
+read()
+Precondition: userName is a registered user
+Exception: If userName is not a registered user throw noSuchUser exception
+Postcondition: read all data from user database
+Return: a userObject
+
+make admin(UserName)
+Precondition: userName is a registered user, user making call must also be admin
+Exception: If userName is not a registered user throw noSuchUser exception
+Postcondition: user becomes admin
+Return: nothing
+
+login(UserName, Password)
+Precondition: userName is a registered user
+Exception: If userName is not a registered user throw noSuchUser exception
+Postcondition:Logged in
+Return: nothing
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/useS.png}
+\end{figure}
+\subsection{Technologies}
+MEAN stack(Mongodb, Express JS, Angular JS, Node JS), Restful services done via angularjs, we wrote an API to do CRUD operations within angular js that uses node js and express js to convert data into json objects and persist it to the mongodb database. Other technologies used in conjunction with the MEAN stack : body-parser, xls-to-json-lc,xslx-to-json-lc,multer,mongojs
+
+Python + NSQ, to communicate with other modules over nsq we made use of python and the NSQ messaging platform technologies included pymongo for persisting purposes aswell as json
+
+\section{Notifications Module}
+\subsection{Scope}
+The notifications module provides notifications to system users regarding particular system updates that a user would like to be notified about through some medium external to the application.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/notS.png}
+\end{figure}
+\subsection{Domain Model}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/notdom.png}
+\end{figure}
+The domain model for the notification system is simple. It is simply a description of the type of notification that the system needs to handle internally. Notifications will be requested in their respective module, such as fitness, who will then request a specified user be notified with a particular module-relevant message which is stored within the modules. The notification system will then, based on the notice type, send the appropriate notification to the user. Another note, is that notifications must be logged and this is reflected in the MessageLog class aggregating 0 to many Notification Requests.
+
+\subsection{Service Contracts}
+This service contract will fail under 3 conditions:
+\begin{itemize}
+\item The request has failed to comply with the validation criteria specified
+\item The request has incomplete information
+\item The notification is for a user that does not exist
+\end{itemize}
+Once the contract has been successfully fulfilled, the appropriate user must be notified according to specifications.
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/notC.png}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/notSeq.png}
+\end{figure}
+The diagram above indicates the point of notifications transactions. As part of a message passing interface, the Message Passing framework that is created to service the needs of the module receives requests to send messages, and then will send them along the agreed upon channels. These channels can be sms, email or some other channel
+\subsection{Technologies}
+Google Email is an API with a capacity to service a number of email within a limit. It is provided by Google and the API is highly integrable within existing applications. The API will be ideal to provide messaging capacity for the system without having to implement email servers internally.
+
+\section{Data Module}
+\subsection{Scope}
+Services for data streaming. Agents register to provide information and to listen to specific elements available in the generated stream.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/dataS.png}
+\end{figure}
+The data module concerns itself with two primary agents: the system server and the generic user access channel which can be 1 of 3 possibilities who all behave in the same way/support the same behaviour. The data module concerns itself primarily with the act of moving information between the two entities. The exact format of this and the exact specifics are not contained in this; rather, the messages and their formats and contents must be independent of the actual carriage medium. 
+
+\subsection{Domain Model}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/dataDom.png}
+
+\end{figure}
+Above we have the domain model for the upstream/downstream data module. The idea is that a generic downstream/upstream exists between user devices and the system server. We have modeled loosely coupled responses/requests that both streams can send to each other. One other aspect to note is that there ideally must be a focus on scalability here. Multiple streams, normally, will be in operation simultaneously in the system and this should not affect the implementation with regards to only supporting a few streams.
+
+\subsection{Service Contracts}
+The transactional nature of this module means that a service contract would only service to indicate message passing. This message passing nature is well known from an abstract perspective and has far more important considerations lower down, in implementation layers with regards to the specifics of stream management and stream control.
+
+\subsection{Technologies}
+There are few fully open source data streaming technologies available. However, Apache Flink is a fully open source stream processing framework with a full DataStreaming API. Furthermore, Apache Flink can support a variety of origin languages for programs like Java,Python and can optimise the stream transfers. It also provides a high-throughput, low-latency streaming engine as well as support for event-time processing and state management. Flink applications are fault-tolerant in the event of machine failure and support exactly-once semantics. It does not provide its own data store but comes with capacity to extend connectors into a variety of data stores.
+
+\section{GIS Module}
+\subsection{Scope}
+Services to gather, maintain, persist and provide information related to fixed spatial information needed for NavUP.  It is about the creation and maintenance of a GIS Map of the campus and persisting  information that can be applied to determine the location of a device based on WiFi signal strengths and other available sources of GIS information. 
+
+This module provide services to search for locations such as landmarks, buildings as well as venues such as offices, lecture halls, labs, etc.
+Use cases:
+\begin{itemize}
+\item Admin:
+    CRUD any kind of singular element
+    Import: Create a batch of elements via upload of a file in specified formats
+\item User:
+    Get XYZ coordinates of a named location
+
+\end{itemize}
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/gisS.png}
+
+\end{figure}[h]
+\subsection{Domain Model}
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/gisDom.png}
+
+\end{figure}
+When thinking of the domain model for the GIS module, it is important to emphasise the data storage and retrieval aspects of this module. The GIS module is going to persist and service requests for GIS information which forms the basis of the entire system. Exploring various techniques such as data warehouses may be options in terms of realising the system in finer detail.
+
+\subsection{Service Contracts}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/gisSe.png}
+
+\end{figure}
+The service contract specified above will be refused under two conditions. If the GIS location or object does not exist or if the request fails the validation protocol, then the contract can be refused. Otherwise, the GIS object will be persisted and stored in the system. Note that the GIS object storage system is not necessarily dependent on a strict coupling to the representation of the GIS object in that the storage system must be generic enough such that the objects stored can be changed without extensive system reworks.
+
+Use cases:
+getCurrentLocation: Determine the current location of the device that is used to access NavUP through services provided in the Data module.
+
+\subsection{Technologies}
+When it comes to GIS technologies, two in particular are of note. 
+\begin{itemize}
+\item GeoBase- This is a Geospatial mapping software available as a software development kit (SDK). It is capable of performing address lookups, mapping, routing, reverse geocoding and navigation. Furthermore, the SDK is highly suited for enterprise environments with high volume transactions.
+\item GeoTools- This is an implementation of the Open Geospatial Consortium(OGC) and is a vendor-neutral set of interfaces for GIS applications written in Java. It currently features:
+\begin{itemize}
+\item Interfaces for spatial concepts and data structures.
+\item JTS Topology Suite Geometry
+\item Attribute, Spatial and Temporal filters matching the OGC Filter specification
+\item Decoding technology (with bindings for manyGML, Filter, KML, SLD and other OGC standards).
+\end{itemize}
+\end{itemize}
+GeoTools, unlike GeoBase, is not based on web technologies.
+
+\section{Navigation Module}
+\subsection{Scope}
+Services to navigate and get directions to a specified location via a route that was calculated according to user-defined specifications. The scope of the navigation module is given by diagram below. It should use information passed through a request as well as services provided by the GIS modules to calculate routes. A route is returned  as a list of waypoints between a given starting point and a given ending point.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/navS.png}
+
+\end{figure}
+\begin{itemize}
+\item saveRoute: routes are persisted to avoid recalculation - services to rate routes and be able to provide the most popular route between two points may be considered. 
+
+\item recordRoute: The actual route followed by a user can be recorded and saved to contribute to information to determine popular routes and possibly to use to calculate/return future routes for a specific user based on his/her habit.
+\item savePreferences: default restrictions to apply when routes are calculated.
+
+\item calculateShortestRoute: total distance is minimised 
+
+\item calculateSimplestRoute: number of waypoints is minimised
+\end{itemize}
+ 
+
+\subsection{Domain Model}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/navDom.png}
+
+\end{figure}
+The domain model presented encapsulates the primary two concepts of both locations and routes. A location, will be defined in terms of 3 characteristics: name, locationID and coordinates. This is such that the location can be tied to both an identifying term as well as specific GPS coordinates. 
+A route is made up of a name as well as a path consisting of at least 2 or more locations. This is so that, depending on the routing algorithms, the start and end (as well as sundry locations for ease of navigation) can be included.
+
+\subsection{Service Contracts}
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{diagrams/navSe.png}
+\end{figure}
+Presented above is the getRoute service contract. Firstly, there are 4 conditions under which the contract will be refused. 
+\begin{enumerate}
+\item NotRegistered - the user invoking the contract is not registered as a user and therefore does not have access rights to this contract
+\item IncompleteInformation - the user did not present the total required information required to get a route.
+
+\item FailedValidation - the information provided by the user is incorrect or fails validation protocols as dictated by the system.
+
+\item RouteNotFound - no such route between the locations provided could be found.
+Additionally, the contract is responsible for, on a successful provision, engaging the navigation component of the system and then guiding the user towards their destination
+
+\end{enumerate}
+
+\subsection{Technologies}
+Google Maps API is an API released by Google. It is a mapping service API that can be embedded into applications to provide web-based navigation services. With the API, it is possible to display directions, including on-foot directions, geocoding and elevation profiles. The API is freely available and will integrate well into a system to provide the necessary services without requiring a commercial licence.
+
+\section{Access Modules}
+As specified in the high level scope diagram above, there are three concerns for the accessibility of the system to both normal users and administrator-level users: iOS, Android and Web-front end. The first two refer to mobile apps and the last refers to the ability of a user to use the system from a web browser (typically a well known one such as Chrome or Firefox) from a device such as a tablet or smartphone. These are the three access channels through which users must be able to interface with the system. It is also important to note that despite their being three separate access channels, the separate channels use the same services and capacities provided by the different modules. I.e. all functionality is provided through services provided through service contracts by other modules. Each access module is thus simply a view.  
+\\\\
+Design and usability concerns and best practices must also be adhered to so that the final products produced reflect both good, usable design as well as a pleasurable experience for the user.
+\\\\
+The specifications presented below are generic in that, they must be applied to all three access methods (iOS, Android and Web front end). The specifications primarily relate to the requirements of the Access Channels in terms of their interfaces and the services accessible through those interfaces.
+
+\subsection{Scope}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/acS.png}
+
+\end{figure}
+The scope presented above is intended to inform as to how to realise the requirements of the system. The actual implementation will differ from Access Channel to access channel but it is important to encapsulate the system functionality regardless of access medium.
+\\\\
+The important note regarding the UI and access channels is that they only provide rendering and display and request capacities in terms of making requests to the services provided by the system possible and convenient.
+
+\subsection{Domain Model}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/acDom.png}
+
+\end{figure}
+In response to the diagram presented above, the architectural design for the generic Access Channel can be thought of as a variation of the Google Card Architecture. To understand this pattern, consider that the Access Channel only has two functions: requesting services and rendering the response. To further explain, this means that for mobile devices, a single view pane or card, is presented to the user at any one time. Switching cards is how the user would be presented with alternative options in terms of user functionality. Additionally, each of the cards is essentially self contained with the services requested and provided by each card being distinct to the any other. Two cards are presented in the domain model above, a card from which a user can request services and a card which is used to render responses back to the user.
+\subsection{Service Contracts}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{diagrams/acSeq.png}
+
+\end{figure}
+Presented above, is the sequence diagram to indicate how a typical interaction between the device and server will function. In the above case, the user has requested a route which is then calculated on the server and sent back. In the process, both Request and Render cards 
+will be switched between.
+
+\subsection{Technologies}
+Programming Languages
+There are several potential languages for consideration in the system. These will be discussed below.
+\begin{itemize}
+\item Java - Java is a widely used and widely accessible programming language that has been used in both backend and frontend applications. The language is widely supported and it can be adapted to be used in a variety of contexts such as mobile development.
+\item Python - Python is a highly adaptable and very diverse language. Python is by default usable in both windows and Linux environments and several frameworks exist to enable mobile development.
+\end{itemize}
+\begin{itemize}
+\item Android Development
+Android Studio SDK is available for native Android application development. In this case, it might be worthwhile to develop natively on Android in Java as it is the primary development language. Android Studio is one such software package that is ideal for Android development although others exist.
+
+\item iOS Development
+There are a variety of options to choose from. The option presented here is Xcode. Xcode is one of the primary development mechanisms for iOS development and is widely supported on the variety of devices that are capable of running iOS. 
+
+\item Web Development
+Ember.js is a Javascript web framework. It is based on the MVVM pattern (Model-view-viewmodel) pattern and is preferable to develop scalable web applications. It is highly used in industry. Furthermore, Ember.js is cross platform and support highly diverse development cycles.
+
+\item Hybrid Model Development
+IONIC is an HTML 5 mobile application framework, that was built using SASS. It provides a variety of components like JavaScript MVVM framework and AngularJS. It can be used in hybrid model development in terms of deploying applications that would be deployable to a variety of different platforms despite using the same original source code.
+
+\end{itemize}
+
+
+
+\end{document}
