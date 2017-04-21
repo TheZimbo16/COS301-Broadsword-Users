@@ -1,0 +1,10 @@
+name,surname,studentnumber,isauthenticated,isadmin
+User,1,13104342,false ,FALSE
+User,2,13104343,false ,FALSE
+User,3,13104344,false ,FALSE
+User,4,13104345,false ,FALSE
+User,5,13104346,true ,FALSE
+User,7,13104347,true ,FALSE
+User,8,13104348,true ,FALSE
+User,0,13104349,true ,FALSE
+User,9,13104332,true ,FALSE
