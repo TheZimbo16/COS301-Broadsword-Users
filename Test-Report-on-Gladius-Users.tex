@@ -1,0 +1,88 @@
+\documentclass[]{report}
+
+% Title Page
+\title{Test Report on Gladius-Users Code}
+\author{Monkeli Dilapisho, Drew Langley, Dawie Pritchard, Cameron Trivella}
+
+
+\begin{document}
+	\maketitle
+	
+	\begin{abstract}
+		Broadsword Users testing of Gladius Users code to:
+		\begin{itemize}
+			\item Register
+			\item Login
+			\item Remove
+			\item Get Details
+			\item Get Email
+			\item Get Phone 
+			\item Get User
+			\item Activate User
+		\end{itemize}	
+		
+	\section*{1. Service Contracts}	
+		\noindent The testing will consist of a check of the Service contracts and a mark of ten for each, namely:\\
+		 	\indent Precondition: userName is a registered user\\ 
+		 	\indent Exception: If userName is not a registered user throw noSuchUser exception \\
+		 	\indent Postcondition: No change \\
+		 	\indent Return: a userObject	\\
+				
+	\end{abstract}
+
+	\section*{1.1. Precondition}
+		*note getUser(username) is presumed to have be renamed getUserDetails(username). getEmail(username) and getPhoneNumber(username). are also available.\\ \\
+		
+		\noindent Test: getUserDetails(username) called on existing user.\\
+		Result: Returned string containing Fullname, email, phone number.\\ \\
+		Test: getEmail(username) called on existing user.\\
+		Result: Returned string containing the correct email.\\\\
+		Test: getPhoneNumber(username) called on existing user.\\
+		Result: Returned string containing the correct phone number.\\
+		
+		\noindent Although no getUser(username) is available, nor any function which returns an object containing the details of the user, restrictions placed on the group by the integration team may have made these options preferable.
+		6/10
+		
+	\section*{1.2. Exception}
+		*note getUse(username)r is presumed to have be renamed getUserDetails(username). getEmail(username) and getPhoneNumber(username). are also available.\\ \\
+		
+		\noindent Test: getUserDetails called on non-existing user.\\
+		Result: Returned string "the user does not exist".\\\\
+		Test: getEmail(username) called on non-existing user.\\
+		Result: Returned string "the user does not exist".\\\\
+		Test: getPhoneNumber(username) called on non-existing user.\\
+		Result: Returned string "the user does not exist".\\
+		
+		\noindent getUser(username) substitutes function as expected under the conditions stipulated.
+		8/10
+		
+	\section*{1.3. Postcondition}
+		No postcondition is present, resulting in no change occurring, as expected.
+		10/10
+		
+	\section*{1.4. Return}
+		No function is evident in the code that returns a user object.
+		0/10
+		
+	\section*{2. Non-functional requirements}
+		Testing on non-functional requirements will include:\\
+		\indent Scalability
+		\indent Efficiency
+		\indent Batch processing
+		\indent Duplicity prevention
+		
+		1000 dummy users have been added to more accurately test the code.
+		
+	\section*{2.1. Scalability}
+		PostgreSQL 9.5 can achieve about 400 000 TPS in select-only pgbench test. Considering that the system will likely receive roughly 30 000 years per year for the foreseeable future, there is unlikely to be any large impact on performance in the future beyond the annoyance of having to add each user individually. Scalability sits at an expected level without offering anything remarkable. 9/10
+		
+	\section*{2.2. Efficiency} 
+		Added 1000 users without much delay, testing with enough users to tax the system is outside of the scope of our ability to test. 10/10  
+		
+	\section*{2.3. Batch processing}
+		Batch processing is not within the capabilities of the Gladius-Users system. 0/10
+		
+	\section*{Duplicity prevention}
+		0 out of 1000 test users could be added multiple times. 10/10
+	
+\end{document}          
