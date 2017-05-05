@@ -20,12 +20,14 @@
 
 \section{Abstract}
 	For round 4 of the COS 301 class project of 2017, in the wake of the implementation phase, the Broadsword Users team has been tasked with testing the Gladios Users team's 		implementation. We created a test model based on the high level functional requirements of the NavUP Software Requirements Specification document, so as to test the various 		specifications of the implementation, covering the core functions and innovations implemented.
-	\\ 
+	\\ \\
 	Testing was performed on the following service contracts and functions:
+	
 	\begin{itemize}
 		\item Register
 		\item Login
 		\item Remove
+		\item Admins
 		\item Get Details
 		\item Get Email
 		\item Get Phone 
@@ -34,142 +36,183 @@
 	\end{itemize}	
 
 \pagebreak
-	
+
 \section{Service Contracts}
-Tests were done using scripts and driver programs to ensure the implementation was tested as if it were operational in the real world.	
+	Tests were done using scripts and driver programs to ensure the implementation was tested as if it were operational in the real world.	
 	\noindent The testing will consisted of a check of the following conditions for each or the services with a large focus on the retrieval of a user's data:\\
-	 	
-	 	\begin{itemize}
+ 	
+ 	\begin{itemize}
 		\item Precondition: a condition that must be satisfied for the function to perform correctly.
 		\item Exception: an exception that is thrown if the precondition is not met.
 		\item Postcondition: a change seen in the system after successful invocation of the function.
-		\item Return: the value returned by the function in query.
+		\item Return: the value returned by the function/use case in query.
+	\end{itemize}
+		
+	\subsection{Register, Login and Removal of users}
+		The functions to allow users to create and remove their personal data were up to standard and performed well under all tests.
+
+		\begin{itemize}
+			\item \textbf{registerUser - }The function recieves a user's username, full name, email, password and phone number as parameters and persists this information to the database so as to register the user. \textbf{Mark: 10/10}
+			\item\textbf{login - }The function recieves username and password as parameters and check if the user has been registered in the database.\textbf{Mark: 10/10}
+			\item \textbf{removeUser - } The function recieves a username as a parameter and deletes the users information from the database.\textbf{Mark: 10/10}
+		\end{itemize}
+	
+		No function was found to allow users to update thier information.
+\pagebreak	
+	\subsection{Administrative Users}
+		The following functions are used to perform administrative tasks: isAdmin() and makeAdmin(). \\
+		\indent * Note: no other admin functionality was found
+	
+		\subsubsection{isAdmin}
+			This function recieves a username as a string, and checks if the username exists in the database. Returns true if the user is an admin.
+		
+			\begin{itemize}
+				\item Precondition: userName is a registered user and is an Admin.
+				\item Exception: If userName is not a registered user throw noSuchUser exception.
+				\item Postcondition: No change.
+				\item Return: true if the user is an admin.
+			\end{itemize}
+		
+			\noindent \textbf{Test:} isAdmin() called on existing admin user.\\
+			\textbf{Result:} Returned true.\\\\
+			\textbf{Test:} isAdmin() called on existing no-admin user.\\
+			\textbf{Result:} Returned false.\\\\
+			\textbf{Test:} isAdmin() called on non-existing user.\\
+			\textbf{Result:} Returned string "the user does not exist".\\ \\
+			\textbf{Mark: 8/10}
+	
+	\pagebreak
+		\subsubsection{makeAdmin}
+			This function recieves a username as a string, and sets the user to an admin.
+		
+		\begin{itemize}
+			\item Precondition: userName is a registered user.
+			\item Exception: If userName is not a registered user throw noSuchUser exception.
+			\item Postcondition: sets user to an admin.
+			\item Return: true if operation successful.
 		\end{itemize}
 			
-\subsection{Register, Login and Removal of users}
-	The functions to allow users to CRUD their personal data were up to standard and performed well under all tests.
-	
-	\begin{itemize}
-		\item \textbf{registerUser - }The function recieves a user's username, full name, email, password and phone number as parameters and persists this information to the 				database so as to register the user. \textbf{Mark: 10/10}
-		\item\textbf{login - }The function recieves username and password as parameters and check if the user has been registered in the database.\textbf{Mark: 10/10}
-		\item \textbf{removeUser - } The function recieves a username as a parameter and delets the users information from the database.\textbf{Mark: 10/10}
-		\end{itemize}
+		\noindent \textbf{Test:} makeAdmin() called on existing user.\\
+		\textbf{Result:} Returned true.\\\\
+		\textbf{Test:} makeAdmin() called on non-existing user.\\
+		\textbf{Result:} Returned string "the user does not exist".\\
+		\\ \\
+		\textbf{Mark: 8/10}
+
 \pagebreak	
-\subsection{Retrieval of User data}
-	Multiple function swere implemented to allow for the retrieval of user data, namely: getUserDetails(). getEmail() and getPhoneNumber()
-	\indent *note getUser(username) is presumed to have be renamed getUserDetails(username). getEmail(username) and getPhoneNumber(username). are also available.
+	\subsection{Retrieval of User data}
+	Multiple functions were implemented to allow for the retrieval of user data, namely: getUserDetails(). getEmail() and getPhoneNumber()\\
+	\indent * Note: getUser(username) is presumed to have be renamed getUserDetails(username). getEmail(username) and getPhoneNumber(username). are also available.
 	
-	\subsubsection{getUserDetails}
-		This function recieves a username as a string, and checks if the username exists in the database. Returns a semi colon separated user object.
-	
-	\begin{itemize}
-		\item Precondition: userName is a registered user
-		\item Exception: If userName is not a registered user throw noSuchUser exception
-		\item Postcondition: No change
-		\item Return: a userObject
-	\end{itemize}
+		\subsubsection{getUserDetails}
+			This function recieves a username as a string, and checks if the username exists in the database. Returns a semi colon separated user object.
 		
-	\noindent \textbf{Test:} getUserDetails() called on existing user.\\
-	\textbf{Result:} Returned string containing Fullname, email, phone number.\\\\
-	\textbf{Test:} getUserDetails() called on non-existing user.\\
-	\textbf{Result:} Returned string "the user does not exist".\\
-	
-	%Test: getEmail(username) called on existing user.\\
-	%Result: Returned string containing the correct email.\\\\
-	%Test: getPhoneNumber(username) called on existing user.\\
-	%Result: Returned string containing the correct phone number.\\
-	
-	\noindent Note: Although no getUser(username) is available, nor any function which returns an object containing the details of the user, restrictions placed on the group by the 			integration team may have made these options preferable.\\ \\ \textbf{Mark: 8/10}
-	
-	
-	\subsubsection{getEmail}
-		This function recieves a username as a string, and checks if the username exists in the database. Returns an email string.
-	
-	\begin{itemize}
-		\item Precondition: userName is a registered user
-		\item Exception: If userName is not a registered user throw noSuchUser exception
-		\item Postcondition: No change
-		\item Return: a user's email
-	\end{itemize}
+		\begin{itemize}
+			\item Precondition: userName is a registered user
+			\item Exception: If userName is not a registered user throw noSuchUser exception
+			\item Postcondition: No change
+			\item Return: a userObject
+		\end{itemize}
+			
+		\noindent \textbf{Test:} getUserDetails() called on existing user.\\
+		\textbf{Result:} Returned string containing Fullname, email, phone number.\\\\
+		\textbf{Test:} getUserDetails() called on non-existing user.\\
+		\textbf{Result:} Returned string "the user does not exist".\\
 		
-	\noindent \textbf{Test:} getEmail() called on existing user.\\
-	\textbf{Result:} Returned string the user's email.\\\\
-	\textbf{Test:} geEmail() called on non-existing user.\\
-	\textbf{Result:} Returned string "the user does not exist".\\
-	\\ \\
-	\textbf{Mark: 8/10}
-	
-	
-	\subsubsection{getPhoneNumber}
-		This function recieves a username as a string, and checks if the username exists in the database. Returns a phone number string.
-	
-	\begin{itemize}
-		\item Precondition: userName is a registered user.
-		\item Exception: If userName is not a registered user throw noSuchUser exception.
-		\item Postcondition: No change.
-		\item Return: a phone number.
-	\end{itemize}
 		
-	\noindent \textbf{Test:} getPhoneNumber() called on existing user.\\
-	\textbf{Result:} Returned string containing the user's phone number.\\\\
-	\textbf{Test:} getPhoneNumber() called on non-existing user.\\
-	\textbf{Result:} Returned string "the user does not exist".\\
-	\\ \\ 
-	\textbf{Mark: 8/10}
+		\noindent Note: Although no getUser(username) is available, nor any function which returns an object containing the details of the user, restrictions placed on the group by the integration team may have made these options preferable.\\ \\ \textbf{Mark: 8/10}
+		
+		\pagebreak
+		\subsubsection{getEmail}
+			This function recieves a username as a string, and checks if the username exists in the database. Returns an email string.
+		
+		\begin{itemize}
+			\item Precondition: userName is a registered user
+			\item Exception: If userName is not a registered user throw noSuchUser exception
+			\item Postcondition: No change
+			\item Return: a user's email
+		\end{itemize}
+			
+		\noindent \textbf{Test:} getEmail() called on existing user.\\
+		\textbf{Result:} Returned string the user's email.\\\\
+		\textbf{Test:} geEmail() called on non-existing user.\\
+		\textbf{Result:} Returned string "the user does not exist".\\ \\
+		\textbf{Mark: 8/10}
+		
+		
+		\subsubsection{getPhoneNumber}
+			This function recieves a username as a string, and checks if the username exists in the database. Returns a phone number string.
+		
+		\begin{itemize}
+			\item Precondition: userName is a registered user.
+			\item Exception: If userName is not a registered user throw noSuchUser exception.
+			\item Postcondition: No change.
+			\item Return: a phone number.
+		\end{itemize}
+			
+		\noindent \textbf{Test:} getPhoneNumber() called on existing user.\\
+		\textbf{Result:} Returned string containing the user's phone number.\\\\
+		\textbf{Test:} getPhoneNumber() called on non-existing user.\\
+		\textbf{Result:} Returned string "the user does not exist".\\
+		\\ 
+		\textbf{Mark: 8/10}
 	
-%\subsection{Exception}
-%	*note getUse(username)r is presumed to have be renamed getUserDetails(username). getEmail(username) and getPhoneNumber(username). are also available.\\ \\
-%	
-%	\noindent Test: getUserDetails called on non-existing user.\\
-%	Result: Returned string "the user does not exist".\\\\
-%	Test: getEmail(username) called on non-existing user.\\
-%	Result: Returned string "the user does not exist".\\\\
-%	Test: getPhoneNumber(username) called on non-existing user.\\
-%	Result: Returned string "the user does not exist".\\
-%	
-%	\noindent getUser(username) substitutes function as expected under the conditions stipulated.
-%	8/10
-%	
-%\subsection{Postcondition}
-%	No postcondition is present, resulting in no change occurring, as expected.
-%	10/10
-%	
-%\subsection{Return}
-%	No function is evident in the code that returns a user object.
-%	0/10
-%	
 
 \pagebreak
 \section{Non-functional Requirements}
 	Testing on non-functional requirements included:\\
-%	\indent Scalability
-%	\indent Efficiency
-%	\indent Batch processing
-%	\indent Duplicity prevention
-	
+
 	\begin{itemize}
 		\item Scalability.
 		\item Efficiency.
+		\item Reliability.
 		\item Batch Processing.
-		\item Duplicity Prevention
+		\item Duplicity Prevention.
+		\item Security.
+		\item Maintainability.
+		\item Usability.
 	\end{itemize}
-	
-	We have added 1000 dummy users were added to more accurately test the code.
-	
-\subsection{Scalability}
-	PostgreSQL 9.5 can achieve about 400 000 TPS in select-only pgbench test. Considering that the system will likely receive roughly 30 000 users per year for the foreseeable 		future, it is unlikely that there would be any large impact on performance in the future beyond the annoyance of having to add each user individually. Scalability sits at an expected level 		without offering anything remarkable. \\ \\
+
+	We have added 1000 dummy users so as to more accurately test the code.
+
+	\subsection{Scalability}
+	PostgreSQL 9.5 can achieve about 400 000 TPS in select-only pgbench tests. Considering that the system will likely receive roughly 30 000 users per year for the foreseeable 		future, it is unlikely that there would be any large impact on performance in the future beyond the annoyance of having to add each user individually. Scalability sits at an 			expected level without offering anything remarkable. \\ \\
 	\textbf{Mark: 9/10}
 	
-\subsection{Efficiency} 
+	\subsection{Efficiency} 
 	Added 1000 users without much delay, testing with enough users to tax the system is outside of the scope of our ability to test. \\ \\ 
+	\textbf{Mark: 10/10}
+	
+	\subsection{Reliability} 
+	This was tested using our set of 1000 dummy users, all high level functionality was tested against each of these users and returned 100 percent accurate results, which is backed up by Java's strong typeset. \\ \\ 
 	\textbf{Mark: 10/10} 
 	
-\subsection{Batch Processing}
+	\subsection{Batch Processing}
 	Batch processing is not within the capabilities of the Gladius-Users system.\\ \\ 
 	\textbf{Mark: 0/10}
 	
-\subsection{Duplicity Prevention}
+	\subsection{Duplicity Prevention}
 	0 out of 1000 test users could be added multiple times. \\ \\ 
 	\textbf{Mark: 10/10}
-
+	
+	\subsection{Security}
+	%The Gladios Team has not implemented any functionality for security purposes such as preventative measures against SQL injection. 
+	%This functionality may have been implemented on the frontend by the integration team. \\ \\ 
+	
+	The Gladios team has also implemented a profile/user activation system, by making use of the following functions: createActivationKey(), testActivatedKey() and getActivation().
+	This implementation allows for an extra layer of security to the system. \\ \\ 
+	\textbf{Mark: 7/10}
+	
+	\subsection{Maintainability}
+	In their implementation, the Gladios Team has used a strong heirarchy and levels of abstraction, which allowed for low coupling in the implementation of the system. \\
+	This also allows for easy maintenance, as classes can easily be edited or changed without large amounts of overhead and time. \\ \\ 
+	\textbf{Mark: 9/10}
+	
+	\subsection{Usability}
+	The usability factor of software is usually supplied by the front end of a system, however, the Gladios team supplied us with a very easy to use driver program to test their basic functions. \\ \\ 
+	\textbf{Mark: 8/10}
+	
+\pagebreak
+\section{Evaluation of test cases by previous team}
+	
 \end{document}
